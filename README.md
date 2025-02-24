@@ -1,265 +1,190 @@
-Weather SDK
-Описание
-Weather SDK — это программная библиотека, которая предоставляет простой интерфейс для взаимодействия с API OpenWeatherMap. Она позволяет разработчикам легко получать актуальные данные о погоде для заданного города в формате JSON.
+# Weather SDK
 
-SDK поддерживает два режима работы:
+## Description
+Weather SDK is a software library that provides a simple interface for interacting with the OpenWeatherMap API. It allows developers to easily retrieve current weather data for a given location in JSON format.
 
-On-demand mode : Обновление данных происходит только при запросе пользователя.
-Polling mode : Автоматическое обновление данных каждые 10 минут для всех сохраненных городов.
-Требования
-Для использования этого SDK необходимы следующие компоненты:
+The SDK supports two modes of operation:
+- **On-demand mode**: Data updates only occur when requested by the user.
+- **Polling mode**: Automatic updates every 10 minutes for all stored locations to ensure zero-latency responses for customer requests.
 
-Java 8 или выше
-Maven (для управления зависимостями)
-API ключ от OpenWeatherMap
-Установка
-1. Добавление зависимости (Maven)
-   Если вы используете Maven, добавьте следующую зависимость в ваш pom.xml:
+---
 
-xml
-Copy
-1
-2
-3
-4
-5
-⌄
+## Requirements
+To use this SDK, the following components are required:
+- Java 8 or higher
+- Maven (for dependency management)
+- An API key from [OpenWeatherMap](https://openweathermap.org/api)
+
+---
+
+## Installation
+
+### 1. Adding Dependency (Maven)
+If you're using Maven, add the following dependency to your `pom.xml`:
+
+```xml
 <dependency>
-<groupId>com.example</groupId>
-<artifactId>weather-sdk</artifactId>
-<version>1.0.0</version>
+    <groupId>com.example</groupId>
+    <artifactId>weather-sdk</artifactId>
+    <version>1.0.0</version>
 </dependency>
-Примечание: Замените groupId, artifactId и version на соответствующие значения из вашего проекта.
+```
 
-2. Ручная установка
-   Если вы не используете Maven, скопируйте JAR-файл SDK в ваш проект и добавьте его в classpath.
+*Note: Replace `groupId`, `artifactId`, and `version` with the appropriate values for your project.*
 
-Использование
-1. Создание экземпляра SDK
-   Создайте новый экземпляр SDK, передав ваш API ключ и указав режим работы (on-demand или polling).
+---
 
-java
-Copy
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-⌄
-⌄
-⌄
-⌄
+### 2. Manual Installation
+If you're not using Maven, copy the SDK JAR file into your project and add it to the classpath.
+
+---
+
+## Usage
+
+### 1. Creating an SDK Instance
+Create a new instance of the SDK by providing your API key and specifying the operating mode (`on-demand` or `polling`).
+
+```java
 import sdk.WeatherSDK;
 
 public class Main {
-public static void main(String[] args) {
-try {
-// Создание SDK в on-demand режиме
-WeatherSDK sdk = WeatherSDK.create("your_api_key", false);
+    public static void main(String[] args) {
+        try {
+            // Create SDK in on-demand mode
+            WeatherSDK sdk = WeatherSDK.create("your_api_key", false);
 
-            // Создание SDK в polling режиме
+            // Create SDK in polling mode
             WeatherSDK pollingSdk = WeatherSDK.create("your_api_key", true);
         } catch (IllegalArgumentException e) {
-            System.err.println("Ошибка: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
         }
     }
 }
-Примечание: Не создавайте несколько экземпляров SDK с одним и тем же API ключом. Это вызовет исключение.
+```
 
-2. Получение данных о погоде
-   Используйте метод getWeather(String city) для получения данных о погоде для указанного города.
+*Note: Do not create multiple instances of the SDK with the same API key. This will throw an exception.*
 
-java
-Copy
-1
-2
-3
-4
-5
-6
-⌄
-⌄
+---
+
+### 2. Retrieving Weather Data
+Use the `getWeather(String city)` method to retrieve weather data for the specified city.
+
+```java
 try {
-String weatherData = sdk.getWeather("London");
-System.out.println(weatherData);
-} catch (Exception e) {
-System.err.println("Ошибка получения погоды: " + e.getMessage());
+    String weatherData = sdk.getWeather("London");
+    System.out.println(weatherData);
+} catch (WeatherException e) {
+    System.err.println("Error retrieving weather: " + e.getMessage());
 }
-Пример ответа:
-json
-Copy
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-⌄
-⌄
-⌄
-⌄
-⌄
+```
+
+#### Example Response:
+```json
 {
-"weather": {
-"main": "Clouds",
-"description": "scattered clouds"
-},
-"temperature": {
-"temp": 269.6,
-"feels_like": 267.57
-},
-"visibility": 10000,
-"wind": {
-"speed": 1.38
-},
-"datetime": 1675744800,
-"sys": {
-"sunrise": 1675751262,
-"sunset": 1675787560
-},
-"timezone": 3600,
-"name": "London"
+  "weather": {
+    "main": "Clouds",
+    "description": "scattered clouds"
+  },
+  "temperature": {
+    "temp": 269.6,
+    "feels_like": 267.57
+  },
+  "visibility": 10000,
+  "wind": {
+    "speed": 1.38
+  },
+  "datetime": 1675744800,
+  "sys": {
+    "sunrise": 1675751262,
+    "sunset": 1675787560
+  },
+  "timezone": 3600,
+  "name": "London"
 }
-3. Удаление экземпляра SDK
-   Если вам нужно удалить экземпляр SDK, используйте метод deleteInstance.
+```
 
-java
-Copy
-1
+---
+
+### 3. Deleting an SDK Instance
+If you need to delete an SDK instance, use the `deleteInstance` method.
+
+```java
 WeatherSDK.deleteInstance("your_api_key");
-Настройка Polling Mode
-В режиме polling, SDK автоматически обновляет данные о погоде для всех сохраненных городов каждые 10 минут. Это обеспечивает нулевую задержку при запросах пользователей.
+```
 
-Примечание: Если вы используете режим polling, убедитесь, что ваш API ключ имеет достаточное количество запросов в месяц.
+---
 
-Обработка ошибок
-SDK генерирует исключения при возникновении ошибок, таких как:
+## Configuring Polling Mode
+In `polling` mode, the SDK automatically updates weather data for all stored locations every 10 minutes. This ensures minimal latency for user requests.
 
-Невалидный API ключ
-Сетевые проблемы
-Отсутствие данных для указанного города
-Пример обработки ошибок:
+*Note: If you're using polling mode, ensure your API key has sufficient monthly request limits.*
 
-java
-Copy
-1
-2
-3
-4
-5
-⌄
-⌄
+---
+
+## Error Handling
+The SDK throws exceptions for various error scenarios, such as:
+- Invalid API key
+- Network issues
+- Missing data for the specified city
+
+Example of error handling:
+```java
 try {
-String weatherData = sdk.getWeather("InvalidCity");
-} catch (Exception e) {
-System.err.println("Ошибка: " + e.getMessage());
+    String weatherData = sdk.getWeather("InvalidCity");
+} catch (WeatherException e) {
+    System.err.println("Error: " + e.getMessage());
 }
-Пример полной программы
-java
-Copy
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-⌄
-⌄
-⌄
-⌄
-⌄
+```
+
+---
+
+## Full Program Example
+```java
 import sdk.WeatherSDK;
 import util.WeatherException;
 
 public class Main {
-public static void main(String[] args) {
-try {
-// Создание SDK в режиме on-demand
-WeatherSDK sdk = WeatherSDK.create("your_api_key", false);
+    public static void main(String[] args) {
+        try {
+            // Create SDK in on-demand mode
+            WeatherSDK sdk = WeatherSDK.create("your_api_key", false);
 
-            // Получение погоды для London
+            // Retrieve weather for London
             String weatherData = sdk.getWeather("London");
-            System.out.println("Погода в London:");
+            System.out.println("Weather in London:");
             System.out.println(weatherData);
 
-            // Удаление экземпляра SDK
+            // Delete SDK instance
             WeatherSDK.deleteInstance("your_api_key");
         } catch (IllegalArgumentException e) {
-            System.err.println("Ошибка создания SDK: " + e.getMessage());
+            System.err.println("Error creating SDK: " + e.getMessage());
         } catch (WeatherException e) {
-            System.err.println("Ошибка получения погоды: " + e.getMessage());
+            System.err.println("Error retrieving weather: " + e.getMessage());
         }
     }
 }
-Тестирование
-SDK содержит набор юнит-тестов для проверки корректности работы методов. Для запуска тестов выполните следующую команду:
+```
 
-bash
-Copy
-1
+---
+
+## Testing
+The SDK includes a set of unit tests to verify the correctness of its methods. To run the tests, execute the following command:
+
+```bash
 mvn test
-Примечание: Для тестирования сетевых запросов используются моки (mocks).
+```
 
-Документация
-Полная документация доступна в формате Javadoc. Чтобы сгенерировать документацию, выполните следующую команду:
+*Note: Mocks (mocks) are used for testing network requests.*
 
-bash
-Copy
-1
+---
+
+## Documentation
+Full documentation is available in Javadoc format. To generate the documentation, run the following command:
+
+```bash
 javadoc -d docs sdk/WeatherSDK.java
-Документация будет находиться в директории docs.
+```
 
-Возможности расширения
-Поддержка нескольких API ключей : SDK уже поддерживает работу с разными API ключами одновременно.
-Добавление новых параметров запроса : Например, прогноз погоды на несколько дней.
-Локализация ответов : Поддержка разных языков для вывода данных.
-Лицензия
-Этот проект распространяется под лицензией MIT. Подробнее см. файл LICENSE .
+The documentation will be located in the `docs` directory.
 
-Контакты
-Если у вас есть вопросы или предложения по улучшению SDK, свяжитесь со мной:
-
-Email: your-email@example.com
-GitHub: your-github-profile
+---
