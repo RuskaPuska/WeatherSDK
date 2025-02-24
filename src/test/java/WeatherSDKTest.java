@@ -21,6 +21,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class WeatherSDKTest {
+    String apiKey = "Insert you key here";
 
     @Mock
     private OkHttpClient mockClient;
@@ -35,13 +36,13 @@ public class WeatherSDKTest {
 
     @BeforeEach
     void setUp() {
-        weatherSDK = WeatherSDK.create("2a09eabc4fca440d961c611206827a52", false);
+        weatherSDK = WeatherSDK.create(apiKey, false);
         weatherSDK.setClient(mockClient);
     }
 
     @AfterEach
     void cleanUp() {
-        WeatherSDK.deleteInstance("2a09eabc4fca440d961c611206827a52");
+        WeatherSDK.deleteInstance(apiKey);
     }
 
     @Test
